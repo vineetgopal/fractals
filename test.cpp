@@ -8,6 +8,7 @@
 #include <time.h>
 #include "base.cpp"
 #include "standardsearch.cpp"
+#include "fractionalcascading.cpp"
 
 using namespace std;
 
@@ -64,6 +65,7 @@ void test_file(string file) {
 
   //======ADD NEW STRUCTURES HERE======
   structures.push_back(new StandardSearch(&lists));
+  structures.push_back(new FractionalCascading(&lists));
 
   cout << "------------------------------\n";
   cout << file << ": " << "\n";

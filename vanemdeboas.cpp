@@ -80,27 +80,3 @@ int VanEmdeBoas::query(int q) {
   return (list->front() <= q) ? (*list)[queryIndex(vEB.data(), height, q) - 1] : INT_MIN;
 }
 
-
-class VanEmdeBoasSearch : public Base {
-public:
-  std::vector<std::vector<int> >* lists;
-  std::vector<VanEmdeBoas> vEB;
-  VanEmdeBoasSearch(std::vector<std::vector<int> >* l);
-  virtual string name() {return "VanEmdeBoasSearch";}
-  virtual void query(int q, std::vector<int>* results);
-};
-
-VanEmdeBoasSearch::VanEmdeBoasSearch(std::vector<std::vector<int> >* l) {
-  lists = l;
-  for (int i = 0; i < l->size(); i++) {
-    VanEmdeBoas _vEB(&(*l)[i]);
-    vEB.push_back(_vEB);
-  }
-}
-
-void VanEmdeBoasSearch::query(int q, std::vector<int>* results) {
-  for (int i = 0; i < lists->size(); i++) {
-    results->push_back(vEB[i].query(q));
-  }
-}
-

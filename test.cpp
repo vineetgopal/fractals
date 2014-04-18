@@ -7,9 +7,10 @@
 #include <sstream>
 #include <time.h>
 #include "base.cpp"
-#include "standardsearch.cpp"
+#include "simplesearch.cpp"
 #include "fractionalcascading.cpp"
 #include "vanemdeboas.cpp"
+#include "vanemdeboassearch.cpp"
 #include "cacheoblivious.cpp"
 
 using namespace std;
@@ -66,7 +67,7 @@ void test_file(string file) {
   std::vector<Base*> structures;
 
   //======ADD NEW STRUCTURES HERE======
-  structures.push_back(new StandardSearch(&lists));
+  structures.push_back(new SimpleSearch(&lists));
   structures.push_back(new FractionalCascading(&lists));
   structures.push_back(new VanEmdeBoasSearch(&lists));
   structures.push_back(new CacheOblivious(&lists));
@@ -104,7 +105,7 @@ int main()
   std::vector<string> TEST_FILES;
 
   //======ADD NEW TEST FILES HERE======
-  TEST_FILES.push_back("consecutive.txt");
+  TEST_FILES.push_back("tests/consecutive.txt");
 
   for (int i = 0; i < TEST_FILES.size(); i++) {
     test_file(TEST_FILES[i]);

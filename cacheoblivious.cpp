@@ -35,20 +35,18 @@ struct Comp {
 class CacheOblivious : public Base {
 public:
   int num_lists;
-  int height;
-  std::vector<int>* list;
-  std::vector<int>* vEB;  
-  std::vector<int>* list_index;
+  std::vector<int> list; // the single long array where the data is stored
+  std::vector<int> list_index; // the index into list for each splitter
+  VanEmdeBoas* vEB;  
   CacheOblivious(std::vector<std::vector<int> >* l);
+  ~CacheOblivious();
   virtual string name() {return "CacheOblivious";}
-  virtual std::vector<int>* query(int q);
+  virtual void query(int q, std::vector<int>* results);
 };
 
 CacheOblivious::CacheOblivious(std::vector<std::vector<int> >* l) {
   num_lists = l->size();
-  list = new std::vector<int>; // the single long array where the data is stored
   std::vector<int> splitters; // the values that split merged array
-  list_index = new std::vector<int>; // the index into list for each splitter
   priority_queue<funnel_t, vector<funnel_t>, Comp> funnel;
   vector<funnel_t> merge;
   int total_elements = 0;
@@ -75,46 +73,47 @@ CacheOblivious::CacheOblivious(std::vector<std::vector<int> >* l) {
   if (splitters.back() < INT_MAX)
     splitters.push_back(INT_MAX);
   
-  vEB = new std::vector<int>(splitters.size(),0);
-  height = VanEmdeBoas::getHeight(splitters.size());
-  VanEmdeBoas::populate(vEB->data(), height, 0, 0, &splitters);
-  list->reserve(total_elements + ((l->size() + 1)*splitters.size()));
-  list_index->reserve(splitters.size());
-  list->push_back(INT_MIN); // base for first bucket - manually add
-  list_index->push_back(0);
+  vEB = new VanEmdeBoas(&splitters);
+  list.reserve(total_elements + ((l->size() + 1)*splitters.size()));
+  list_index.reserve(splitters.size());
+  list.push_back(INT_MIN); // base for first bucket - manually add
+  list_index.push_back(0);
   int cumulative_bucket_size = 0;
   for (int i = 0; i < splitters.size(); i++) {
     for (int j = 0; j < l->size(); j++) {
-      list->push_back(merge[j].previous());
+      list.push_back(merge[j].previous());
       while (merge[j].front() < splitters[i]) {
-        list->push_back(merge[j].front());
+        list.push_back(merge[j].front());
         merge[j].increment();
         cumulative_bucket_size++;
       }
     }
     cumulative_bucket_size += (l->size() + 1);
-    list_index->push_back(cumulative_bucket_size);
-    list->push_back(splitters[i]);
+    list_index.push_back(cumulative_bucket_size);
+    list.push_back(splitters[i]);
   }
-  list->push_back(INT_MAX);
+  list.push_back(INT_MAX);
 }
 
-std::vector<int>* CacheOblivious::query(int q) {
-  std::vector<int>* vec = new std::vector<int>(num_lists);
-  int bucket_index = VanEmdeBoas::queryIndex(vEB->data(), height, q); 
-  int index = (*list_index)[bucket_index];
-  int base = (*list)[index];
+CacheOblivious::~CacheOblivious() {
+  delete vEB;
+}
+
+void CacheOblivious::query(int q, std::vector<int>* results) {
+  results->resize(num_lists, 0);
+  int bucket_index = vEB->queryIndex(q); 
+  int index = list_index[bucket_index];
+  int base = list[index];
   index++;
   int list_id = 0;
-  while (index < ((*list_index)[bucket_index + 1])) {
-    if ((*list)[index] <= q) {
-      (*vec)[list_id] = (*list)[index];
+  while (index < (list_index[bucket_index + 1])) {
+    if (list[index] <= q) {
+      (*results)[list_id] = list[index];
     }
     index++;
-    if ((*list)[index] < base) {
+    if (list[index] < base) {
       list_id++;
     }
   }
-  return vec;
 }
 

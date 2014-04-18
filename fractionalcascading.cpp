@@ -3,8 +3,6 @@
 #include <iostream>
 #include <list>
 
-using namespace std;
-
 struct fractional_cascading_t {
   int value;
   int left_index;
@@ -28,12 +26,15 @@ fractional_cascading_t::fractional_cascading_t() {
 class FractionalCascading : public Base {
 public:
   std::vector<std::vector<fractional_cascading_t> >* lists;
+  std::vector<std::vector<int> >* original_lists;
   FractionalCascading(std::vector<std::vector<int> >* l);
+  ~FractionalCascading();
   virtual string name() {return "FractionalCascading";}
-  virtual std::vector<int>* query(int q);
+  virtual void query(int q, std::vector<int>* results);
 };
 
 FractionalCascading::FractionalCascading(std::vector<std::vector<int> >* l) {
+  original_lists = l;
   lists = new std::vector<std::vector<fractional_cascading_t> >;
   lists->reserve(l->size());
   int last_size = 0;
@@ -68,8 +69,12 @@ FractionalCascading::FractionalCascading(std::vector<std::vector<int> >* l) {
   }
 }
 
-std::vector<int>* FractionalCascading::query(int q) {
-  std::vector<int>* vec = new std::vector<int>(lists->size());
+FractionalCascading::~FractionalCascading() {
+  delete lists;
+}
+
+void FractionalCascading::query(int q, std::vector<int>* results) {
+  results->resize(lists->size(), 0);
   int left = 0;
   int right = (*lists)[lists->size() - 1].size() - 1;
   while (left < (right - 1)) {
@@ -85,12 +90,13 @@ std::vector<int>* FractionalCascading::query(int q) {
       pred++;
     }
     if ((*lists)[i][pred].down_index == -1) {
-      (*vec)[i] = (*lists)[i][pred].value; // the predecessor is valid element
+      // the predecessor is valid element
+      (*results)[i] = (*lists)[i][pred].value; 
       pred = (*lists)[i][(*lists)[i][pred].left_index].down_index;
     } else {
-      (*vec)[i] = (*lists)[i][(*lists)[i][pred].left_index].value; // cascade
+      // cascade
+      (*results)[i] = (*lists)[i][(*lists)[i][pred].left_index].value; 
       pred = (*lists)[i][pred].down_index;
     }
   }
-  return vec;
 }

@@ -9,8 +9,8 @@ class StandardSearch : public Base {
 public:
   std::vector<std::vector<int> >* lists;
   StandardSearch(std::vector<std::vector<int> >* l);
-  virtual string name() {return "StandardSearch";}
-  virtual std::vector<int>* query(int q);
+  virtual string name() {return "StandardSearch   ";}
+  virtual void query(int q, std::vector<int>* results);
 };
 
 StandardSearch::StandardSearch(std::vector<std::vector<int> >* l) {
@@ -21,11 +21,9 @@ StandardSearch::StandardSearch(std::vector<std::vector<int> >* l) {
   }
 }
 
-std::vector<int>* StandardSearch::query(int q) {
-  std::vector<int>* vec = new std::vector<int>(lists->size());
+void StandardSearch::query(int q, std::vector<int>* results) {
   for (int i = 0; i < lists->size(); i++) {
     int predecessor = *(std::upper_bound(lists->at(i).begin(), lists->at(i).end(), q) - 1);
-    (*vec)[i] = predecessor;
+    results->push_back(predecessor);
   }
-  return vec;
 }

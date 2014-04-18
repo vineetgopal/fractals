@@ -9,6 +9,8 @@
 #include "base.cpp"
 #include "standardsearch.cpp"
 #include "fractionalcascading.cpp"
+#include "vanemdeboas.cpp"
+#include "cacheoblivious.cpp"
 
 using namespace std;
 
@@ -66,6 +68,8 @@ void test_file(string file) {
   //======ADD NEW STRUCTURES HERE======
   structures.push_back(new StandardSearch(&lists));
   structures.push_back(new FractionalCascading(&lists));
+  structures.push_back(new VanEmdeBoasSearch(&lists));
+  structures.push_back(new CacheOblivious(&lists));
 
   cout << "------------------------------\n";
   cout << file << ": " << "\n";
@@ -76,7 +80,8 @@ void test_file(string file) {
     for (int j = 0; j < structures.size(); j++) {
       Base* structure = structures[j];
       clock_t t = clock();
-      std::vector<int> results = *structure->query(q);
+      std::vector<int> results;
+      structure->query(q, &results);
       cout << fixed << structure->name() << "\t: " << (clock() - t) / (double) (CLOCKS_PER_SEC) << '\n';
       if (results != expected_answers[i]) {
         cout << "------------------------" << "\n";

@@ -8,6 +8,7 @@
 #include <time.h>
 #include "base.cpp"
 #include "simplesearch.cpp"
+#include "lotsofspacesearch.cpp"
 #include "fractionalcascading.cpp"
 #include "vanemdeboas.cpp"
 #include "vanemdeboassearch.cpp"
@@ -71,6 +72,7 @@ void test_file(string file) {
   structures.push_back(new FractionalCascading(&lists));
   structures.push_back(new VanEmdeBoasSearch(&lists));
   structures.push_back(new CacheOblivious(&lists));
+  structures.push_back(new LotsOfSpaceSearch(&lists));
 
   cout << "------------------------------\n";
   cout << file << ": " << "\n";

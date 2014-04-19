@@ -11,7 +11,7 @@ public:
   std::vector<std::vector<int> >* lists;
   std::vector<int> vEB;
   LotsOfSpaceSearch(std::vector<std::vector<int> >* l);
-  virtual string name() {return "LotsOfSpaceSearch   ";}
+  virtual string name() {return "LotsOfSpaceSearch";}
   virtual void query(int q, std::vector<int>* results);
 };
 
@@ -35,7 +35,12 @@ LotsOfSpaceSearch::LotsOfSpaceSearch(std::vector<std::vector<int> >* l) {
     int query = vEB[i];
     for (int j = 0; j < l->size(); j++) {
       std::vector<int> list = l->at(j);
-      predecessors[j] = *(std::upper_bound(list.begin(), list.end(), query) - 1);
+      std::vector<int>::iterator it = std::upper_bound(list.begin(), list.end(), query);
+      if (it > list.begin()) {
+        predecessors[j] = *(it - 1);
+      } else {
+        predecessors[j] = -1;
+      }
     }
     all_predecessors->push_back(predecessors);
   }

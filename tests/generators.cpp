@@ -7,8 +7,8 @@
 using namespace std;
 
 void uniform(std::vector<std::vector<int> >* lists, std::vector<int> * queries) {
-  int NUM_LISTS = 50;
-  int SIZE_LISTS = 1000;
+  int NUM_LISTS = 500;
+  int SIZE_LISTS = 600;
   int MAX_NUM = 100000;
 
   // generate each list by choose SIZE_LISTS random numbers for each list

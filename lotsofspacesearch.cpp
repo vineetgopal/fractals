@@ -7,7 +7,7 @@ using namespace std;
 
 class LotsOfSpaceSearch : public Base {
 public:
-  std::vector<std::vector<int> >* all_predecessors;
+  std::vector<std::vector<int> *>* all_predecessors;
   std::vector<std::vector<int> >* lists;
   std::vector<int> vEB;
   LotsOfSpaceSearch(std::vector<std::vector<int> >* l);
@@ -16,7 +16,6 @@ public:
 };
 
 LotsOfSpaceSearch::LotsOfSpaceSearch(std::vector<std::vector<int> >* l) {
-  // std::vector<int> vEB;
   lists = new std::vector<std::vector<int> >;
   for (int i = 0; i < l->size(); i++) {
     std::vector<int> list = l->at(i);
@@ -29,25 +28,25 @@ LotsOfSpaceSearch::LotsOfSpaceSearch(std::vector<std::vector<int> >* l) {
 
   std::sort(vEB.begin(), vEB.end());
 
-  all_predecessors = new std::vector<std::vector<int> >;
+  all_predecessors = new std::vector<std::vector<int> *>(vEB.size());
+
+  std::vector<int> counts(l->size());
   for (int i = 0; i < vEB.size(); i++) {
-    std::vector<int> predecessors(l->size());
+    std::vector<int>* predecessors = new std::vector<int>(l->size());
     int query = vEB[i];
     for (int j = 0; j < l->size(); j++) {
-      std::vector<int> list = l->at(j);
-      std::vector<int>::iterator it = std::upper_bound(list.begin(), list.end(), query);
-      if (it > list.begin()) {
-        predecessors[j] = *(it - 1);
-      } else {
-        predecessors[j] = -1;
+      std::vector<int> *list = &l->at(j);
+      while (counts[j] + 1 < list->size() && list->at(counts[j]+1) <= query) {
+        counts[j]++;
       }
+      (*predecessors)[j] = list->at(counts[j]);
     }
-    all_predecessors->push_back(predecessors);
+
+    (*all_predecessors)[i] = predecessors;
   }
-  cout << "\n";
 }
 
 void LotsOfSpaceSearch::query(int q, std::vector<int>* results) {
   int index = std::upper_bound(vEB.begin(), vEB.end(), q) - 1 - vEB.begin();
-  results->insert(results->begin(), all_predecessors->at(index).begin(), all_predecessors->at(index).end());
+  results->insert(results->begin(), all_predecessors->at(index)->begin(), all_predecessors->at(index)->end());
 }

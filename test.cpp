@@ -92,17 +92,17 @@ void test_file(string file) {
 
       // TEST CORRECTNESS OF QUERIES
       
-      // if (results != expected_answers[i]) {
-      //   cout << "------------------------" << "\n";
-      //   cout << "Test failed for " << structure->name() << "\n";
-      //   cout << "Query was: " << q << "\n";
-      //   cout << "Expected results: ";
-      //   print_vector(expected_answers[i]);
-      //   cout << "but actually got: ";
-      //   print_vector(results);
-      //   cout << "------------------------" << "\n";
-      //   exit(1);
-      // }
+      if (results != expected_answers[i]) {
+        cout << "------------------------" << "\n";
+        cout << "Test failed for " << structure->name() << "\n";
+        cout << "Query was: " << q << "\n";
+        cout << "Expected results: ";
+        print_vector(expected_answers[i]);
+        cout << "but actually got: ";
+        print_vector(results);
+        cout << "------------------------" << "\n";
+        exit(1);
+      }
     }
     cout << "\n";
   }
@@ -142,8 +142,8 @@ void test_generator(void (*f)(std::vector<std::vector<int> >*, std::vector<int>*
   clock_t t = clock();
 
   t = clock(); structures.push_back(new SimpleSearch(&lists)); printf("%-25s%f\n", (*(structures.end()-1))->name().c_str(), (clock() - t) / (double) (CLOCKS_PER_SEC));
-  t = clock(); structures.push_back(new FractionalCascading(&lists)); printf("%-25s%f\n", (*(structures.end()-1))->name().c_str(), (clock() - t) / (double) (CLOCKS_PER_SEC));
   t = clock(); structures.push_back(new VanEmdeBoasSearch(&lists)); printf("%-25s%f\n", (*(structures.end()-1))->name().c_str(), (clock() - t) / (double) (CLOCKS_PER_SEC));
+  t = clock(); structures.push_back(new FractionalCascading(&lists)); printf("%-25s%f\n", (*(structures.end()-1))->name().c_str(), (clock() - t) / (double) (CLOCKS_PER_SEC));
   t = clock(); structures.push_back(new CacheOblivious(&lists)); printf("%-25s%f\n", (*(structures.end()-1))->name().c_str(), (clock() - t) / (double) (CLOCKS_PER_SEC));
   t = clock(); structures.push_back(new LotsOfSpaceSearch(&lists)); printf("%-25s%f\n", (*(structures.end()-1))->name().c_str(), (clock() - t) / (double) (CLOCKS_PER_SEC));
 
@@ -167,7 +167,7 @@ int main()
   std::vector<string> TEST_FILES;
 
   //======ADD NEW TEST FILES HERE======
-  // TEST_FILES.push_back("testing1.txt");
+  TEST_FILES.push_back("tests/consecutive.txt");
 
   for (int i = 0; i < TEST_FILES.size(); i++) {
     test_file(TEST_FILES[i]);

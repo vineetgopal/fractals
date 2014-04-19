@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// Takes in an empty list of lists, and list of ints, and fills it in with appropriate test data
 void uniform(std::vector<std::vector<int> >* lists, std::vector<int> * queries) {
   int NUM_LISTS = 500;
   int SIZE_LISTS = 600;

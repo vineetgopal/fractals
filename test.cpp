@@ -167,12 +167,13 @@ int main()
   std::vector<string> TEST_FILES;
 
   //======ADD NEW TEST FILES HERE======
-  TEST_FILES.push_back("tests/consecutive.txt");
+  // TEST_FILES.push_back("tests/consecutive.txt");
 
   for (int i = 0; i < TEST_FILES.size(); i++) {
     test_file(TEST_FILES[i]);
   }
 
+  //====== ADD NEW TEST GENERATORS HERE=======
   test_generator(uniform);
-  // test_generator(gaussian);
+  test_generator(gaussian);
 }
